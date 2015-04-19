@@ -1,0 +1,103 @@
+#!/bin/bash -e
+
+TPUT=/usr/bin/tput
+
+ORG_PATH="git.1vh.de/maximilian.pachl"
+REPO_PATH="${ORG_PATH}/bowler"
+BINARY_PATH="bin/bowler"
+
+VERSION=$(go version | awk '{print $3}' | sed 's/go//g')
+NEED_VERSION="1.4"
+
+log_msg () {
+    if [ -z "${1:-}" ]; then
+        return 1
+    fi
+
+    /bin/echo -n "[....] " 
+    /bin/echo -n "$1" || true
+    return 0
+}
+
+log_end() {
+	 RED=$( $TPUT setaf 1)
+        GREEN=$( $TPUT setaf 2)
+        YELLOW=$( $TPUT setaf 3)
+        NORMAL=$( $TPUT op)
+
+        $TPUT civis || true
+        $TPUT sc && \
+        $TPUT hpa 0 && \
+        if [ $1 -eq 0 ]; then
+            /bin/echo -ne "[${GREEN} ok ${NORMAL}" || true
+        elif [ $1 -eq 255 ]; then
+            /bin/echo -ne "[${YELLOW}skip${NORMAL}" || true
+        else
+            /bin/echo -ne "[${RED}FAIL${NORMAL}" || true
+        fi && \
+        $TPUT rc || true
+        $TPUT cnorm || true
+
+	if [ ! -z "${2:-}" ]; then
+        /bin/echo ": $2"
+    else
+    	/bin/echo ""
+    fi
+        
+}
+
+if [ "$1" == "clean" ]; then
+	rm -rf bin/
+	unlink gopath/src/${REPO_PATH}
+	rm -rf  gopath
+	rm -rf *~
+	rm -rf assets.go
+
+else
+
+	log_msg "Checking GO version"
+	if [[ $VERSION* == $NEED_VERSION* ]]; then
+		#echo "Right go version found: $VERSION"
+		log_end 0 "found go$VERSION"
+	else
+		#echo "Found Go Version $VERSION - need $NEED_VERSION"
+		log_end 1 "found go$VERSION, min-need go$NEED_VERSION"
+		exit 1
+	fi
+
+	if [ ! -h gopath/src/${REPO_PATH} ]; then
+	        mkdir -p gopath/src/${ORG_PATH}
+        	ln -s ../../../.. gopath/src/${REPO_PATH} || exit 255
+	fi
+
+	export GOBIN=${PWD}/bin
+	export GOPATH=${PWD}/gopath
+	eval $(go env)
+
+	#log_msg "Building assets"
+	#go-bindata -o assets.go assets/
+	#log_end $?
+
+	log_msg "Fetching dependencies"
+	if [ ! -d gopath/src/github.com ]; then
+		go get ${REPO_PATH}
+		log_end $?
+	else
+		log_end 255
+	fi
+
+	log_msg "Building bowler"
+	BUILD_LOG=$(go build -o $BINARY_PATH ${REPO_PATH} 2>&1 || true)
+	if [ -n "$BUILD_LOG" ]; then
+		log_end 1
+		echo "$BUILD_LOG"
+		exit 1
+	else
+		log_end 0
+	fi
+
+	echo ""
+
+	exit 0
+fi
+

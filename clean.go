@@ -1,0 +1,34 @@
+package main
+
+import (
+	"git.1vh.de/maximilian.pachl/bowler/bowlerfile"
+
+	"os"
+)
+
+
+// ----------------------------------------------------------------------------------
+//  Funktionen
+// ----------------------------------------------------------------------------------
+
+func clean(project *bowlerfile.Bowlerfile) (error) {
+	// remove output directory
+	err := os.RemoveAll("bin")
+	if (err != nil) {
+		return err
+	}
+
+	// remove source symlink
+	err = os.Remove(".bowler/src/" + project.Package)
+	if (err != nil) {
+		return err
+	}
+
+	// remove bowler working directory
+	err = os.RemoveAll(".bowler")
+	if (err != nil) {
+		return err
+	}
+
+	return nil
+}

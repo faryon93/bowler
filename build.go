@@ -1,0 +1,134 @@
+package main
+
+import (
+	"git.1vh.de/maximilian.pachl/bowler/bowlerfile"
+	"git.1vh.de/maximilian.pachl/bowler/version"
+
+
+	"os"
+	"os/exec"
+	"strings"
+	"fmt"
+)
+
+func build(buildFile *bowlerfile.Bowlerfile) {
+	//-----------------------------------------------------------------------------------
+	/// Initial Checks
+
+	// Check GO version
+	BeginStepMessage("Checking GO version")
+	installedVersion := version.InstalledGoVersion()
+	if (installedVersion == nil) {
+		EndStepMessageStr(TYPE_FAILED, "error fetching installed GO version")
+		os.Exit(-1)
+	}
+
+	// the installed GO version is too old
+	if (installedVersion.IsOlderThan(buildFile.MinGoVersion)) {
+		EndStepMessageStr(TYPE_FAILED, "needing GO version " + buildFile.MinGoVersion.String() + " but found " + installedVersion.String())
+		os.Exit(-2)
+
+	// the installed Go version is newer or equals the required version -> carry on
+	} else {
+		EndStepMessageStr(TYPE_OKAY, "found " + installedVersion.String() + ", required: " + buildFile.MinGoVersion.String())
+	}
+
+
+	//-----------------------------------------------------------------------------------
+	// Do stuff
+
+	// create working directory
+	BeginStepMessage("Creating working directory")
+	err := createPackageBase(buildFile)
+	if (err != nil) {
+		// directory already exists
+		if (strings.Contains(err.Error(), "exists")) {
+			EndStepMessageStr(TYPE_SKIPPED, "")
+
+		// error occoured while creating directory
+		}else {
+			EndStepMessage(err)
+		}
+		
+	// Working direcotory successfully created
+	} else {
+		EndStepMessageStr(TYPE_OKAY, "")
+	}
+	
+	// create output artifact directory
+	BeginStepMessage("Creating output directory")
+	err = os.MkdirAll("bin", 0777)
+	EndStepMessage(err)	
+	
+	// fetch project dependencies
+	BeginStepMessage("Fetching project dependencies")
+	err, o := fetchDependencies(buildFile)
+	if (err != nil) {
+		EndStepMessageStr(TYPE_FAILED, err.Error())
+		fmt.Println(o)
+		os.Exit(-1)
+	} else {
+		EndStepMessageStr(TYPE_OKAY, "")
+	}
+
+	// Build the binary
+	BeginStepMessage("Building project " + buildFile.Name)
+	err, o = executeBuild(buildFile)
+	if (err != nil) {
+		EndStepMessageStr(TYPE_FAILED, err.Error())
+		fmt.Println(o)
+		os.Exit(-1)
+	} else {
+		EndStepMessageStr(TYPE_OKAY, "")
+	}
+}
+
+func createPackageBase(config *bowlerfile.Bowlerfile) (error) {
+	folders := strings.Split(config.Package, "/")
+
+	// put package base path together
+	basePath := ""
+	for i := 0; i < (len(folders) - 1); i++ {
+		basePath += "/" + folders[i]
+	}
+
+	// create nessessary folders
+	err := os.MkdirAll(".bowler/src" + basePath, 0755)
+	if (err != nil) {
+		return err
+	}
+
+	// create symlic link for package
+	err = os.Symlink(strings.Repeat("../", len(folders) + 1), ".bowler/src/" + config.Package)
+	if (err != nil) {
+		return err
+	}
+
+	return nil
+}
+
+func fetchDependencies(project *bowlerfile.Bowlerfile) (error, string) {
+	pwd, _ := os.Getwd()
+
+	// prepare env for go get command
+	command := exec.Command("go", "get", project.Package)
+	command.Env = []string{
+		"GOBIN=" + pwd +"/bin",
+		"GOPATH=" + pwd + "/.bowler/",
+		"PATH=" + os.Getenv("PATH")}
+
+	// run command 
+	out, err := command.CombinedOutput()
+	return err, string(out)
+}
+
+func executeBuild(project *bowlerfile.Bowlerfile) (error, string) {
+	pwd, _ := os.Getwd()
+
+	// exectue go version command
+	command := exec.Command("go", "build",  "-o", "bin/" + project.Name, project.Package)
+	command.Env = []string{"GOBIN=" + pwd +"/bin", "GOPATH=" + pwd + "/.bowler/"}
+
+	out, err := command.CombinedOutput()
+	return err, string(out)
+}
