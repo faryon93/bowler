@@ -8,6 +8,7 @@ import (
 	"os/exec"
 	"strings"
 	"fmt"
+	"strconv"
 )
 
 
@@ -16,7 +17,7 @@ import (
 // ----------------------------------------------------------------------------------
 
 // TODO: in ~/.bowlerrc auslagern
-const ASSETS_OUTPUT_FILE = "_assets.go"
+const ASSETS_OUTPUT_FILE = "assets__.go"
 
 
 // ----------------------------------------------------------------------------------
@@ -68,24 +69,30 @@ func build(buildFile *bowlerfile.Bowlerfile) {
 	}
 	
 	// create output artifact directory
-	BeginStepMessage("Creating output directory")
+	BeginStepMessage("Creating artifact directory")
 	err = os.MkdirAll("bin", 0777)
 	EndStepMessage(err)	
 	
 	// build assets
 	BeginStepMessage("Building assets")
-	err, o := buildAssets(buildFile)
-	if (err != nil) {
-		EndStepMessageStr(TYPE_FAILED, err.Error())
-		fmt.Println(o)
-		os.Exit(-1)	
+	if (len(buildFile.Assets) > 0) {
+		err, o := buildAssets(buildFile)
+		if (err != nil) {
+			EndStepMessageStr(TYPE_FAILED, err.Error())
+			fmt.Println(o)
+			os.Exit(-1)	
+		} else {
+			EndStepMessageStr(TYPE_OKAY,  "included " + strconv.Itoa(len(buildFile.Assets)) + " assets")
+		}
+
 	} else {
-		EndStepMessageStr(TYPE_OKAY, "")
+		EndStepMessageStr(TYPE_SKIPPED, "No assets to build")
 	}
+	
 
 	// fetch project dependencies
 	BeginStepMessage("Fetching project dependencies")
-	err, o = fetchDependencies(buildFile)
+	err, o := fetchDependencies(buildFile)
 	if (err != nil) {
 		EndStepMessageStr(TYPE_FAILED, err.Error())
 		fmt.Println(o)
