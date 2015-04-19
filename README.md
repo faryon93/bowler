@@ -45,7 +45,7 @@ To create a new project you can use the *init* command. Bowler will ask you a fe
 		project name: test
 		project description: A super awesome project
 		base package: github.com/tester/test          
-		required GO version \[1.4.2\]: 
+		required GO version: 
 	Successfully created Bowlerfile: /home/maxi/go/test/Bowlerfile
 
 	Execution finished in 18.582381152s
