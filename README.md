@@ -38,6 +38,18 @@ Cleaning up a project is as easy as typing:
 
 	$: bowler clean
 
+To create a new project you can use the *init* command. Bowler will ask you a few questions to create your Bowlerfile:
+
+	$: bowler init
+	Executing task 'init':
+		project name: test
+		project description: A super awesome project
+		base package: github.com/tester/test          
+		required GO version [1.4.2]: 
+	Successfully created Bowlerfile: /home/maxi/go/test/Bowlerfile
+
+	Execution finished in 18.582381152s
+
 
 ## Tips
 
