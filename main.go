@@ -30,7 +30,7 @@ func main() {
 			bowlerfile := loadBowlerfile()
 
 			fmt.Println("Executing task 'build':")
-			build(bowlerfile)	
+			taskBuild(bowlerfile)	
 
 		// clean the project directory
 		} else if (os.Args[1] == "clean") {
@@ -39,13 +39,16 @@ func main() {
 			// exectute clean task
 			fmt.Println("Executing task 'clean':")	
 			BeginStepMessage("Cleaning project root")
-			err := clean(bowlerfile)
+			err := taskClean(bowlerfile)
 			EndStepMessage(err)
 
 		// initilaize a new project
 		} else if (os.Args[1] == "init") {
 			fmt.Println("Executing task 'init':")
 			taskInit()
+
+		} else if (os.Args[1] == "version") {
+			fmt.Println("//TODO: Print version")
 
 		// i don't know what the user want form me :O
 		} else {

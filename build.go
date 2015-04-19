@@ -24,7 +24,7 @@ const ASSETS_OUTPUT_FILE = "assets__.go"
 //  Funktionen
 // ----------------------------------------------------------------------------------
 
-func build(buildFile *bowlerfile.Bowlerfile) {
+func taskBuild(buildFile *bowlerfile.Bowlerfile) {
 	//-----------------------------------------------------------------------------------
 	/// Initial Checks
 
@@ -160,8 +160,12 @@ func executeBuild(project *bowlerfile.Bowlerfile) (error, string) {
 	pwd, _ := os.Getwd()
 
 	// exectue go version command
-	command := exec.Command("go", "build",  "-o", "bin/" + project.Name, project.Package)
-	command.Env = []string{"GOBIN=" + pwd +"/bin", "GOPATH=" + pwd + "/.bowler/"}
+	// TODO: use -ldflags "-X ..." to implement a automatically updated version file
+	command := exec.Command("go", "build", "-o", "bin/" + project.Name, project.Package)
+	command.Env = []string{
+		"GOBIN=" + pwd +"/bin",
+		"GOPATH=" + pwd + "/.bowler/",
+		"PATH=" + os.Getenv("PATH")}
 
 	out, err := command.CombinedOutput()
 	return err, string(out)

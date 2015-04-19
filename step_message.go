@@ -1,14 +1,24 @@
 package main 
 
-import "fmt"
-import "github.com/fatih/color"
-import "os"
+import (
+	"fmt"
+	"github.com/fatih/color"
+	"os"
+)
+
+
+// ----------------------------------------------------------------------------------
+//  Konstanten
+// ----------------------------------------------------------------------------------
 
 const TYPE_OKAY = 0
 const TYPE_FAILED = 1
 const TYPE_SKIPPED = 2
 
 
+// ----------------------------------------------------------------------------------
+//  Funktionen
+// ----------------------------------------------------------------------------------
 
 func BeginStepMessage(message string) {
 	fmt.Print("\t[....] " + message)

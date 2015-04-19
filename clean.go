@@ -2,7 +2,6 @@ package main
 
 import (
 	"git.1vh.de/maximilian.pachl/bowler/bowlerfile"
-
 	"os"
 	"strings"
 )
@@ -12,7 +11,7 @@ import (
 //  Funktionen
 // ----------------------------------------------------------------------------------
 
-func clean(project *bowlerfile.Bowlerfile) (error) {
+func taskClean(project *bowlerfile.Bowlerfile) (error) {
 	// remove output directory
 	err := os.RemoveAll("bin")
 	if (err != nil) {

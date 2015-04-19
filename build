@@ -87,7 +87,7 @@ else
 	fi
 
 	log_msg "Building bowler"
-	BUILD_LOG=$(go build -o $BINARY_PATH ${REPO_PATH} 2>&1 || true)
+	BUILD_LOG=$(go build -ldflags "" -o $BINARY_PATH ${REPO_PATH} 2>&1 || true)
 	if [ -n "$BUILD_LOG" ]; then
 		log_end 1
 		echo "$BUILD_LOG"
