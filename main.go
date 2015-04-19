@@ -42,7 +42,8 @@ func main() {
 			err := clean(bowlerfile)
 			EndStepMessage(err)
 
-		}else if (os.Args[1] == "init") {
+		// initilaize a new project
+		} else if (os.Args[1] == "init") {
 			fmt.Println("Executing task 'init':")
 			taskInit()
 

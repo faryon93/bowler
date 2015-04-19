@@ -7,8 +7,8 @@ import (
 	"os"
 	"bufio"
 	"strings"
+	"path/filepath"
 )
-
 
 
 // ----------------------------------------------------------------------------------
@@ -24,8 +24,10 @@ func taskInit() {
     	basePackage := AskUser("base package", "")
     	goVersion := AskUser("required GO version", "1.4.2")
 
+    	// TODO: plausibility checks for entered data
+
     	// Save the newly created Bowlerfile
-    	(&bowlerfile.Bowlerfile{
+    	err = (&bowlerfile.Bowlerfile{
     		Name: projectName,
     		Description: projectDescription,
     		Package: basePackage,
@@ -35,12 +37,20 @@ func taskInit() {
     		Assets: []string{},
     	}).Save(BUILD_FILE_NAME)
 
+    	path, _ := filepath.Abs(BUILD_FILE_NAME)
+    	if (err == nil) {
+    		fmt.Println("Successfully created Bowlerfile: " + path)
+    	} else {
+    		fmt.Println("Error creating Bowlerfile: " + err.Error())
+    	}
+
 	} else {
 		fmt.Println("Bowlerfile already exists. Nothing to init here!")
 	}
 }
 
 func AskUser(question string, defaultAnswer string) (string) {
+	// print the question and default answer if provided
 	reader := bufio.NewReader(os.Stdin)
 	fmt.Print("\t" + question)
 	if (len(defaultAnswer) > 0) {

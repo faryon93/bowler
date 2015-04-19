@@ -20,6 +20,7 @@ type Bowlerfile struct {
 	Assets []string
 }
 
+// private Datatypes for Bowlerfile json parsing
 type goConfig struct {
 	MinVersion string `json:"min-version"`
 }
@@ -52,6 +53,8 @@ func Load(filePath string) (*Bowlerfile, error) {
 	if (err != nil) {
 		return nil, err
 	}
+
+	// TODO: filter possible dangerous symbols in assets, like &&, to prevent shell command execution
 
 	// return newly created object
 	return &Bowlerfile{

@@ -29,7 +29,6 @@ func EndStepMessageStr(t int, message string) {
 	green := color.New(color.FgGreen).SprintFunc()
 	yellow := color.New(color.FgYellow).SprintFunc()
 
-
 	// save cursor position, got back to begin
 	fmt.Print("\033[s\r\t[")
 
