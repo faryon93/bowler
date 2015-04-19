@@ -33,7 +33,7 @@ func clean(project *bowlerfile.Bowlerfile) (error) {
 
 	// remove assets file
 	err = os.Remove(ASSETS_OUTPUT_FILE)
-	if (err != nil && !strings.Contains(err.Error(), "no such file")) {
+	if (err != nil && !strings.Contains(err.Error(), "no such")) {
 		return err
 	}
 

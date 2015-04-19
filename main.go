@@ -1,9 +1,12 @@
 package main
 
-import "git.1vh.de/maximilian.pachl/bowler/bowlerfile"
-import "os"
-import "fmt"
-import "path/filepath"
+import (
+	"git.1vh.de/maximilian.pachl/bowler/bowlerfile"
+	"os"
+	"fmt"
+	"path/filepath"
+	"time"
+)
 
 
 // ----------------------------------------------------------------------------------
@@ -33,6 +36,8 @@ func main() {
 	}
 
 	if (len(os.Args) >= 2) {
+		startTime := time.Now()
+
 		// the user requests us to build the project
 		if (os.Args[1] == "build") {
 			fmt.Println("Executing task 'build':")
@@ -48,7 +53,10 @@ func main() {
 		// i don't know what the user want form me :O
 		} else {
 			fmt.Println("ERROR: invalid command: " + os.Args[1])
+			os.Exit(-1)
 		}
+
+		fmt.Printf("\nExecution finished in %s\n", time.Since(startTime))
 
 	// the subcommand was not provided -> error	
 	} else {

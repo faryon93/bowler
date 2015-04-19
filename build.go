@@ -77,14 +77,18 @@ func build(buildFile *bowlerfile.Bowlerfile) {
 	BeginStepMessage("Building assets")
 	if (len(buildFile.Assets) > 0) {
 		err, o := buildAssets(buildFile)
-		if (err != nil) {
+		if (err == nil) {
+			EndStepMessageStr(TYPE_OKAY,  "included " + strconv.Itoa(len(buildFile.Assets)) + " assets")
+
+		// building of assets failed
+		} else {
 			EndStepMessageStr(TYPE_FAILED, err.Error())
 			fmt.Println(o)
 			os.Exit(-1)	
-		} else {
-			EndStepMessageStr(TYPE_OKAY,  "included " + strconv.Itoa(len(buildFile.Assets)) + " assets")
+			
 		}
 
+	// the user has not specified assets to build
 	} else {
 		EndStepMessageStr(TYPE_SKIPPED, "No assets to build")
 	}
