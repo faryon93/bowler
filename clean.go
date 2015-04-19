@@ -21,7 +21,7 @@ func clean(project *bowlerfile.Bowlerfile) (error) {
 
 	// remove source symlink
 	err = os.Remove(".bowler/src/" + project.Package)
-	if (err != nil) {
+	if (err != nil && !strings.Contains(err.Error(), "no such file")) {
 		return err
 	}
 

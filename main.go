@@ -22,33 +22,29 @@ const BUILD_FILE_NAME = "Bowlerfile"
 // ----------------------------------------------------------------------------------
 
 func main() {
-	path, err := filepath.Abs(BUILD_FILE_NAME)
-	if (err == nil) {
-		fmt.Println("Using buildfile " + path)
-		fmt.Println()
-	}
-
-	// Load the Bowlerfile
-	buildFile, err := bowlerfile.Load(BUILD_FILE_NAME)
-	if (err != nil) {
-		fmt.Printf("Could not open Bowlerfile: %s\n", err)
-		os.Exit(-3)
-	}
-
 	if (len(os.Args) >= 2) {
 		startTime := time.Now()
 
 		// the user requests us to build the project
 		if (os.Args[1] == "build") {
+			bowlerfile := loadBowlerfile()
+
 			fmt.Println("Executing task 'build':")
-			build(buildFile)	
+			build(bowlerfile)	
 
 		// clean the project directory
 		} else if (os.Args[1] == "clean") {
-			fmt.Println("Executing task 'clean':")
+			bowlerfile := loadBowlerfile()
+
+			// exectute clean task
+			fmt.Println("Executing task 'clean':")	
 			BeginStepMessage("Cleaning project root")
-			err = clean(buildFile)
+			err := clean(bowlerfile)
 			EndStepMessage(err)
+
+		}else if (os.Args[1] == "init") {
+			fmt.Println("Executing task 'init':")
+			taskInit()
 
 		// i don't know what the user want form me :O
 		} else {
@@ -62,4 +58,21 @@ func main() {
 	} else {
 		fmt.Println("ERROR: missing command")
 	}
+}
+
+func loadBowlerfile() (*bowlerfile.Bowlerfile) {
+	path, err := filepath.Abs(BUILD_FILE_NAME)
+	if (err == nil) {
+		fmt.Println("Using buildfile " + path)
+		fmt.Println()
+	}
+
+	// Load the Bowlerfile
+	buildFile, err := bowlerfile.Load(BUILD_FILE_NAME)
+	if (err != nil) {
+		fmt.Printf("Could not open Bowlerfile: %s\n", err)
+		os.Exit(-3)
+	}
+
+	return buildFile
 }
