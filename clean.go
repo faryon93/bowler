@@ -4,6 +4,7 @@ import (
 	"git.1vh.de/maximilian.pachl/bowler/bowlerfile"
 
 	"os"
+	"strings"
 )
 
 
@@ -32,7 +33,7 @@ func clean(project *bowlerfile.Bowlerfile) (error) {
 
 	// remove assets file
 	err = os.Remove(ASSETS_OUTPUT_FILE)
-	if (err != nil) {
+	if (err != nil && !strings.Contains(err.Error(), "no such file")) {
 		return err
 	}
 

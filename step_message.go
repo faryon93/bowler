@@ -11,7 +11,7 @@ const TYPE_SKIPPED = 2
 
 
 func BeginStepMessage(message string) {
-	fmt.Print("[....] " + message)
+	fmt.Print("\t[....] " + message)
 }
 
 func EndStepMessage(err error) {
@@ -31,7 +31,7 @@ func EndStepMessageStr(t int, message string) {
 
 
 	// save cursor position, got back to begin
-	fmt.Print("\033[s\r[")
+	fmt.Print("\033[s\r\t[")
 
 	// print message type with color
 	if (t == TYPE_OKAY) {

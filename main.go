@@ -3,6 +3,7 @@ package main
 import "git.1vh.de/maximilian.pachl/bowler/bowlerfile"
 import "os"
 import "fmt"
+import "path/filepath"
 
 
 // ----------------------------------------------------------------------------------
@@ -18,6 +19,12 @@ const BUILD_FILE_NAME = "Bowlerfile"
 // ----------------------------------------------------------------------------------
 
 func main() {
+	path, err := filepath.Abs(BUILD_FILE_NAME)
+	if (err == nil) {
+		fmt.Println("Using buildfile " + path)
+		fmt.Println()
+	}
+
 	// Load the Bowlerfile
 	buildFile, err := bowlerfile.Load(BUILD_FILE_NAME)
 	if (err != nil) {
@@ -28,10 +35,12 @@ func main() {
 	if (len(os.Args) >= 2) {
 		// the user requests us to build the project
 		if (os.Args[1] == "build") {
+			fmt.Println("Executing task 'build':")
 			build(buildFile)	
 
 		// clean the project directory
 		} else if (os.Args[1] == "clean") {
+			fmt.Println("Executing task 'clean':")
 			BeginStepMessage("Cleaning project root")
 			err = clean(buildFile)
 			EndStepMessage(err)
