@@ -48,7 +48,8 @@ func main() {
 			taskInit()
 
 		} else if (os.Args[1] == "version") {
-			fmt.Println("//TODO: Print version")
+			fmt.Println("Bowler version 0.2 (rev3f4ab50e1)")
+			os.Exit(0)
 
 		// i don't know what the user want form me :O
 		} else {
