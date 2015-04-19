@@ -4,12 +4,24 @@ import (
 	"git.1vh.de/maximilian.pachl/bowler/bowlerfile"
 	"git.1vh.de/maximilian.pachl/bowler/version"
 
-
 	"os"
 	"os/exec"
 	"strings"
 	"fmt"
 )
+
+
+// ----------------------------------------------------------------------------------
+//  Konstanten
+// ----------------------------------------------------------------------------------
+
+// TODO: in ~/.bowlerrc auslagern
+const ASSETS_OUTPUT_FILE = "_assets.go"
+
+
+// ----------------------------------------------------------------------------------
+//  Funktionen
+// ----------------------------------------------------------------------------------
 
 func build(buildFile *bowlerfile.Bowlerfile) {
 	//-----------------------------------------------------------------------------------
@@ -60,9 +72,20 @@ func build(buildFile *bowlerfile.Bowlerfile) {
 	err = os.MkdirAll("bin", 0777)
 	EndStepMessage(err)	
 	
+	// build assets
+	BeginStepMessage("Building assets")
+	err, o := buildAssets(buildFile)
+	if (err != nil) {
+		EndStepMessageStr(TYPE_FAILED, err.Error())
+		fmt.Println(o)
+		os.Exit(-1)	
+	} else {
+		EndStepMessageStr(TYPE_OKAY, "")
+	}
+
 	// fetch project dependencies
 	BeginStepMessage("Fetching project dependencies")
-	err, o := fetchDependencies(buildFile)
+	err, o = fetchDependencies(buildFile)
 	if (err != nil) {
 		EndStepMessageStr(TYPE_FAILED, err.Error())
 		fmt.Println(o)
@@ -128,6 +151,18 @@ func executeBuild(project *bowlerfile.Bowlerfile) (error, string) {
 	// exectue go version command
 	command := exec.Command("go", "build",  "-o", "bin/" + project.Name, project.Package)
 	command.Env = []string{"GOBIN=" + pwd +"/bin", "GOPATH=" + pwd + "/.bowler/"}
+
+	out, err := command.CombinedOutput()
+	return err, string(out)
+}
+
+func buildAssets(project *bowlerfile.Bowlerfile) (error, string) {
+	pwd, _ := os.Getwd()
+	command := exec.Command("go-bindata", "-o", ASSETS_OUTPUT_FILE, strings.Join(project.Assets, " "))
+	command.Env = []string{
+		"GOBIN=" + pwd +"/bin",
+		"GOPATH=" + pwd + "/.bowler/",
+		"PATH=" + os.Getenv("PATH")}
 
 	out, err := command.CombinedOutput()
 	return err, string(out)

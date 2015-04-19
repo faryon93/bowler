@@ -19,9 +19,11 @@ const BUILD_FILE_NAME = "Bowlerfile"
 
 func main() {
 	// Load the Bowlerfile
-	BeginStepMessage("Loading Bowlerfile")
 	buildFile, err := bowlerfile.Load(BUILD_FILE_NAME)
-	EndStepMessage(err)
+	if (err != nil) {
+		fmt.Printf("Could not open Bowlerfile: %s\n", err)
+		os.Exit(-3)
+	}
 
 	if (len(os.Args) >= 2) {
 		// the user requests us to build the project

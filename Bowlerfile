@@ -1,11 +1,13 @@
 {
 	"project": {
 		"name": "bowler",
-		"description": "A simple docker build system",
+		"description": "A simple GO build system",
 		"package": "git.1vh.de/maximilian.pachl/bowler"
 	},
 
 	"go": {
 		"min-version": "1.4.2"
-	}
+	},
+
+	"assets": [ "assets/" ]
 }

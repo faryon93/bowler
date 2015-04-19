@@ -17,6 +17,7 @@ type Bowlerfile struct {
 
 	MinGoVersion *version.Version
 
+	Assets []string
 }
 
 type bowlerfile struct {
@@ -29,6 +30,8 @@ type bowlerfile struct {
 	Go struct {
 		MinVersion	string 	`json:"min-version"`
 	} `json:"go"`
+
+	Assets []string `json:"assets"`
 }
 
 
@@ -53,5 +56,6 @@ func Load(filePath string) (*Bowlerfile, error) {
 		Name: decoded.Project.Name,
 		Description: decoded.Project.Description,
 		Package: decoded.Project.Package,
-		MinGoVersion: version.FromString(decoded.Go.MinVersion)}, nil
+		MinGoVersion: version.FromString(decoded.Go.MinVersion),
+		Assets: decoded.Assets}, nil
 }
