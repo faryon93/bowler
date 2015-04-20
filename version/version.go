@@ -1,10 +1,10 @@
 package version
 
 import (
-	"strings"
-	"strconv"
-	"os/exec"
-	"regexp"
+    "strings"
+    "strconv"
+    "os/exec"
+    "regexp"
 )
 
 
@@ -13,8 +13,8 @@ import (
 // ----------------------------------------------------------------------------------
 
 type Version struct {
-	/** Parsete Version. */
-	versionInfos []int
+    /** Parsete Version. */
+    versionInfos []int
 }
 
 
@@ -23,18 +23,17 @@ type Version struct {
 // ----------------------------------------------------------------------------------
 
 func FromString(version string) (*Version) {
-	// split the parts of the versions
-	var versions []int
-	for _, piece := range strings.Split(version, ".") {
-		// convert string to int and append to array
-		partInt, err := strconv.Atoi(piece)
-		if (err == nil) {
-			versions = append(versions, partInt)
-		}
-		
-	}
+    // split the parts of the versions
+    var versions []int
+    for _, piece := range strings.Split(version, ".") {
+        // convert string to int and append to array
+        partInt, err := strconv.Atoi(piece)
+        if (err == nil) {
+            versions = append(versions, partInt)
+        }
+    }
 
-	return &Version { versionInfos: versions }
+    return &Version { versionInfos: versions }
 }
 
 
@@ -44,54 +43,54 @@ func FromString(version string) (*Version) {
 
 // TODO: Not working with different version length!
 func (this *Version) IsOlderThan(other *Version) (bool) {
-	equals := false
+    equals := false
 
-	// comapre all parts of the version
-	for index, piece := range this.versionInfos {
-		// if one piece is newer we are finished
-		if (piece < other.versionInfos[index]) {
-			return true
+    // comapre all parts of the version
+    for index, piece := range this.versionInfos {
+        // if one piece is newer we are finished
+        if (piece < other.versionInfos[index]) {
+            return true
 
-		} else if (piece == other.versionInfos[index]) {
-			equals = true
-		}
-	}
+        } else if (piece == other.versionInfos[index]) {
+            equals = true
+        }
+    }
 
-	// non of the parts was smaller than other
-	// so this version is older
-	return !equals
+    // non of the parts was smaller than other
+    // so this version is older
+    return !equals
 }
 
 func (this *Version) String() string {
-	version := ""
-	for index, piece := range this.versionInfos {
-		version += strconv.Itoa(piece)
-		if (index < (len(this.versionInfos) - 1)) {
-			version += "."
-		}
-	}
+    version := ""
+    for index, piece := range this.versionInfos {
+        version += strconv.Itoa(piece)
+        if (index < (len(this.versionInfos) - 1)) {
+            version += "."
+        }
+    }
 
-	return version
+    return version
 }
 
 func InstalledGoVersion() (*Version) {
-	// exectue go version command
-	out, err := exec.Command("go", "version").Output()
-	if (err != nil) {
-		return nil
-	}
+    // exectue go version command
+    out, err := exec.Command("go", "version").Output()
+    if (err != nil) {
+        return nil
+    }
 
-	// Installierte GO Version rausfischen
-	versionRegex := regexp.MustCompile(`go([\d|.]+)`)
-	versionString := versionRegex.FindAllStringSubmatch(string(out), -1)
+    // Installierte GO Version rausfischen
+    versionRegex := regexp.MustCompile(`go([\d|.]+)`)
+    versionString := versionRegex.FindAllStringSubmatch(string(out), -1)
 
-	// commands output returned a valid text
-	if (len(versionString) > 0) {
-		return FromString(versionString[0][1])
+    // commands output returned a valid text
+    if (len(versionString) > 0) {
+        return FromString(versionString[0][1])
 
-	// regex pattern was not found in
-	// the commands output
-	} else {
-		return nil
-	}
+    // regex pattern was not found in
+    // the commands output
+    } else {
+        return nil
+    }
 }
