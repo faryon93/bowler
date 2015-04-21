@@ -1,5 +1,12 @@
 # Bowler - A GO build tool
 
+## Installation
+
+Just type the following command into your shell and make sure your **$GOPATH/bin** directory is included in **$PATH**:
+
+	go get -u git.1vh.de/maximilian.pachl/bowler/...
+
+
 ## Bowlerfile
 
 All options for building your project are set in the **Bowlerfile**. It should be located in the project root.
@@ -25,7 +32,7 @@ The *project* and *go* section is obligatory, while the *assets* section can be 
 ## Assets
 Bowler uses go-bindata to build your assets. See [https://github.com/jteeuwen/go-bindata] for further information. 
 
-**IMPORTANT: Bowler creates a file called assets__.go in your project root, so make shure your project does not include such file.**
+**IMPORTANT: Bowler creates a file called assets__.go in your project root, so make sure your project does not include such file.**
 
 
 ## Usage
