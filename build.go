@@ -149,7 +149,8 @@ func fetchDependencies(project *bowlerfile.Bowlerfile) (error, string) {
 	command.Env = []string{
 		"GOBIN=" + pwd +"/bin",
 		"GOPATH=" + pwd + "/.bowler/",
-		"PATH=" + os.Getenv("PATH")}
+		"PATH=" + os.Getenv("PATH"),
+		"HOME=" + os.Getenv("HOME")}
 
 	// run command 
 	out, err := command.CombinedOutput()
