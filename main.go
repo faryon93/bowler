@@ -30,7 +30,7 @@ func main() {
             bowlerfile := loadBowlerfile()
 
             fmt.Println("Executing task 'build':")
-            taskBuild(bowlerfile)	
+            taskBuild(bowlerfile)
 
         // clean the project directory
         } else if (os.Args[1] == "clean") {
@@ -41,6 +41,12 @@ func main() {
             BeginStepMessage("Cleaning project root")
             err := taskClean(bowlerfile)
             EndStepMessage(err)
+
+        } else if (os.Args[1] == "install") {
+            bowlerfile := loadBowlerfile()
+            fmt.Println("Executing task 'install':")  
+            taskBuild(bowlerfile)
+            taskInstall(bowlerfile)
 
         // initilaize a new project
         } else if (os.Args[1] == "init") {
