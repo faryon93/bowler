@@ -1,7 +1,7 @@
 package main
 
 import (
-    "git.1vh.de/maximilian.pachl/bowler/bowlerfile"
+    "github.com/faryon93/bowler/bowlerfile"
     "os"
     "strings"
 )

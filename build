@@ -2,7 +2,7 @@
 
 TPUT=/usr/bin/tput
 
-ORG_PATH="git.1vh.de/maximilian.pachl"
+ORG_PATH="github.com/faryon93/bowler"
 REPO_PATH="${ORG_PATH}/bowler"
 BINARY_PATH="bin/bowler"
 

@@ -1,8 +1,8 @@
 package main
 
 import (
-    "git.1vh.de/maximilian.pachl/bowler/bowlerfile"
-    "git.1vh.de/maximilian.pachl/bowler/version"
+    "github.com/faryon93/bowler/bowlerfile"
+    "github.com/faryon93/bowler/version"
     "fmt"
     "os"
     "bufio"

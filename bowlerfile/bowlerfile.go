@@ -1,7 +1,7 @@
 package bowlerfile
 
 import (
-    "git.1vh.de/maximilian.pachl/bowler/version"
+    "github.com/faryon93/bowler/version"
     "io/ioutil"
     "encoding/json"
     "strings"
