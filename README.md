@@ -4,7 +4,7 @@
 
 Just type the following command into your shell and make sure your **$GOPATH/bin** directory is included in **$PATH**:
 
-	go get -u ggithub.com/faryon93/bowler/...
+	go get -u github.com/faryon93/bowler/...
 
 
 ## Bowlerfile
