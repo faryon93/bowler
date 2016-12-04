@@ -1,0 +1,11 @@
+{
+	"project": {
+		"name": "bowler",
+		"description": "",
+		"package": "github.com/faryon93/bowler"
+	},
+	"go": {
+		"min-version": "1.7.1"
+	},
+	"assets": []
+}

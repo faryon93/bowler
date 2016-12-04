@@ -164,6 +164,9 @@ func executeBuild(project *bowlerfile.Bowlerfile) (error, string) {
     command.Env = []string{
         "GOBIN=" + pwd +"/bin",
         "GOPATH=" + pwd + "/.bowler/",
+        "GOOS=" + os.Getenv("GOOS"),
+        "GOARCH=" + os.Getenv("GOARCH"),
+        "CGO_ENABLED=" + os.Getenv("CGO_ENABLED"),
         "PATH=" + os.Getenv("PATH")}
 
     out, err := command.CombinedOutput()

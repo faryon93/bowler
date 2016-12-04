@@ -7,7 +7,7 @@ REPO_PATH="${ORG_PATH}/bowler"
 BINARY_PATH="bin/bowler"
 
 VERSION=$(go version | awk '{print $3}' | sed 's/go//g')
-NEED_VERSION="1.4"
+NEED_VERSION="1.7.1"
 
 log_msg () {
     if [ -z "${1:-}" ]; then
@@ -67,7 +67,7 @@ else
 
 	if [ ! -h gopath/src/${REPO_PATH} ]; then
 	        mkdir -p gopath/src/${ORG_PATH}
-        	ln -s ../../../.. gopath/src/${REPO_PATH} || exit 255
+        	ln -s ../../../../../ gopath/src/${REPO_PATH} || exit 255
 	fi
 
 	export GOBIN=${PWD}/bin
